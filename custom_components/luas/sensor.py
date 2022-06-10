@@ -1,36 +1,130 @@
-"""Sensor platform for Luas."""
-from .const import DEFAULT_NAME
-from .const import DOMAIN
-from .const import ICON
-from .const import SENSOR
-from .entity import LuasEntity
+"""Luas sensor"""
+from __future__ import annotations
+import logging
+
+import voluptuous as vol
+
+from homeassistant.components.sensor import (
+    SensorEntity,
+    PLATFORM_SCHEMA,
+)
+from homeassistant.const import TIME_MINUTES
+from homeassistant.core import HomeAssistant
+import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+from . import luasforecasts
+import typing
+
+_LOGGER = logging.getLogger(__name__)
+
+CONF_STATION: typing.Final = "station"
+CONF_DIRECTION: typing.Final = "direction"
+CONF_DESTINATION: typing.Final = "destination"
+CONF_NAME: typing.Final = "name"
+
+DEFAULT_NAME: typing.Final = "Next Luas"
+
+ATTR_MESSAGE = "Message"
+ATTR_DUE_IN = "Due in"
+ATTR_DESTINATION = "Destination"
+ATTR_NEXT_DUE_IN = "Next due in"
+ATTR_NEXT_DESTINATION = "Next destination"
+
+ICON = "mdi:tram"
+
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
+    {
+        vol.Required(CONF_STATION): cv.string,
+        vol.Optional(CONF_DIRECTION): cv.string,
+        vol.Optional(CONF_DESTINATION): cv.string,
+        vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
+    }
+)
 
 
-async def async_setup_entry(hass, entry, async_add_devices):
-    """Setup sensor platform."""
-    coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_devices([LuasSensor(coordinator, entry)])
+def setup_platform(
+    hass: HomeAssistant,
+    config: ConfigType,
+    add_entities: AddEntitiesCallback,
+    discovery_info: DiscoveryInfoType | None = None,
+) -> None:
+    """Set up the sensor platform."""
+    add_entities([LuasSensor(config)])
 
 
-class LuasSensor(LuasEntity):
-    """luas Sensor class."""
+class LuasSensor(SensorEntity):
+    """Representation of a Sensor."""
 
-    @property
-    def name(self):
-        """Return the name of the sensor."""
-        return f"{DEFAULT_NAME}_{SENSOR}"
+    _attr_name = "LUAS"
+    _attr_native_unit_of_measurement = TIME_MINUTES
+    _attributes = {}
 
-    @property
-    def state(self):
-        """Return the state of the sensor."""
-        return self.coordinator.data.get("body")
+    def __init__(self, config: ConfigType) -> None:
+        """Initialize a LuasSensor"""
+        self._station = config[CONF_STATION]
+        self._name = config[CONF_NAME]
+
+        self._direction = config.get(CONF_DIRECTION, "").lower()
+        self._destination = config.get(CONF_DESTINATION, "").lower()
+
+        self.update()  # TODO: Remove me
 
     @property
     def icon(self):
-        """Return the icon of the sensor."""
+        """Icon to use in the frontend, if any."""
         return ICON
 
     @property
-    def device_class(self):
-        """Return de device class of the sensor."""
-        return "luas__custom_device_class"
+    def extra_state_attributes(self):
+        return self._attributes
+
+    def _filter_trams(
+        self, trams: list[luasforecasts.Tram]
+    ) -> list[luasforecasts.Tram]:
+        if self._direction:
+            _LOGGER.debug("Filtering for direction: %s", self._direction)
+            trams = [t for t in trams if t["direction"].lower() == self._direction]
+        if self._destination:
+            _LOGGER.debug("Filtering for destination: %s", self._destination)
+            trams = [t for t in trams if t["destination"].lower() == self._destination]
+        return trams
+
+    def update(self) -> None:
+        """Fetch new Luas data"""
+        self._attr_native_value = ""
+        self._attributes = {
+            ATTR_MESSAGE: "",
+            ATTR_DUE_IN: "",
+            ATTR_DESTINATION: "",
+            ATTR_NEXT_DUE_IN: "",
+            ATTR_NEXT_DESTINATION: "",
+        }
+
+        data = luasforecasts._parse(luasforecasts._fetch_raw(self._station))
+        _LOGGER.debug("Got LUAS data: %s", data)
+
+        self._attributes[ATTR_MESSAGE] = data["message"]
+        self._attr_name = self._name
+
+        relevant_trams = self._filter_trams(data["trams"])
+
+        _LOGGER.debug("Relevant trams: %s", relevant_trams)
+
+        if len(relevant_trams) > 0:
+            due_mins = relevant_trams[0]["dueMins"]
+            self._attributes.update(
+                {
+                    ATTR_DUE_IN: due_mins,
+                    ATTR_DESTINATION: relevant_trams[0]["destination"],
+                }
+            )
+            self._attr_native_value = due_mins
+
+        if len(relevant_trams) > 1:
+            self._attributes.update(
+                {
+                    ATTR_NEXT_DUE_IN: relevant_trams[1]["dueMins"],
+                    ATTR_NEXT_DESTINATION: relevant_trams[1]["destination"],
+                }
+            )

@@ -1,10 +1,16 @@
 {
   "domain": "luas",
-  "name": "Luas",
-  "documentation": "https://github.com/lutzky/hass-luas",
-  "issue_tracker": "https://github.com/lutzky/hass-luas/issues",
-  "dependencies": [],
+  "name": "LUAS",
   "config_flow": true,
-  "codeowners": ["@lutzky"],
-  "requirements": []
+  "documentation": "https://www.home-assistant.io/integrations/luas",
+  "requirements": [],
+  "ssdp": [],
+  "zeroconf": [],
+  "version": "0.0.0",
+  "homekit": {},
+  "dependencies": [],
+  "codeowners": [
+    "@lutzky"
+  ],
+  "iot_class": "cloud_polling"
 }
