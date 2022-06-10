@@ -1,19 +1,19 @@
 """Luas sensor"""
 from __future__ import annotations
+
 import logging
-
 import typing
-import voluptuous as vol
 
-from homeassistant.components.sensor import (
-    SensorEntity,
-    PLATFORM_SCHEMA,
-)
+import homeassistant.helpers.config_validation as cv
+import voluptuous as vol
+from homeassistant.components.sensor import PLATFORM_SCHEMA
+from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import TIME_MINUTES
 from homeassistant.core import HomeAssistant
-import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+from homeassistant.helpers.typing import ConfigType
+from homeassistant.helpers.typing import DiscoveryInfoType
+
 from . import luasforecasts
 
 _LOGGER = logging.getLogger(__name__)

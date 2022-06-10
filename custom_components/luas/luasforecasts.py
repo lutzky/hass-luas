@@ -1,10 +1,8 @@
 """luasforecasts fetches data from luasforecasts.rpa.ie
 
 More info: https://data.gov.ie/dataset/luas-forecasting-api"""
-
 import sys
 import typing
-import urllib
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree

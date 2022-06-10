@@ -1,5 +1,4 @@
 """Tests for luasforecasts module"""
-
 import unittest
 
 from custom_components.luas import luasforecasts
