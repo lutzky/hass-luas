@@ -2,6 +2,7 @@
 from __future__ import annotations
 import logging
 
+import typing
 import voluptuous as vol
 
 from homeassistant.components.sensor import (
@@ -14,7 +15,6 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from . import luasforecasts
-import typing
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -44,10 +44,10 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 
 
 def setup_platform(
-    hass: HomeAssistant,
+    hass: HomeAssistant,  # pylint: disable=unused-argument
     config: ConfigType,
     add_entities: AddEntitiesCallback,
-    discovery_info: DiscoveryInfoType | None = None,
+    discovery_info: DiscoveryInfoType | None = None,  # pylint: disable=unused-argument
 ) -> None:
     """Set up the sensor platform."""
     add_entities([LuasSensor(config)])
@@ -67,8 +67,6 @@ class LuasSensor(SensorEntity):
 
         self._direction = config.get(CONF_DIRECTION, "").lower()
         self._destination = config.get(CONF_DESTINATION, "").lower()
-
-        self.update()  # TODO: Remove me
 
     @property
     def icon(self):
@@ -101,7 +99,7 @@ class LuasSensor(SensorEntity):
             ATTR_NEXT_DESTINATION: "",
         }
 
-        data = luasforecasts._parse(luasforecasts._fetch_raw(self._station))
+        data = luasforecasts.fetch(self._station)
         _LOGGER.debug("Got LUAS data: %s", data)
 
         self._attributes[ATTR_MESSAGE] = data["message"]
