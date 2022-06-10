@@ -72,6 +72,9 @@ jobs:
         uses: "actions/setup-python@v2.2.1"
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
-      - name: Tests suite
+      - name: Install Python modules
         run: |
-          python -m unittest
+          pip install --constraint=.github/workflows/constraints.txt pytest
+      - name: Test suite
+        run: |
+          pytest
