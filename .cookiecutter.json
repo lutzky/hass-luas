@@ -1,0 +1,10 @@
+{
+  "_template": "gh:oncleben31/cookiecutter-homeassistant-custom-component",
+  "class_name_prefix": "Luas",
+  "domain_name": "luas",
+  "friendly_name": "Luas",
+  "github_user": "lutzky",
+  "project_name": "hass-luas",
+  "test_suite": "no",
+  "version": "0.0.0"
+}

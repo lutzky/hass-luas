@@ -1,0 +1,10 @@
+{
+  "domain": "luas",
+  "name": "Luas",
+  "documentation": "https://github.com/lutzky/hass-luas",
+  "issue_tracker": "https://github.com/lutzky/hass-luas/issues",
+  "dependencies": [],
+  "config_flow": true,
+  "codeowners": ["@lutzky"],
+  "requirements": []
+}
