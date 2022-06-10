@@ -1,7 +1,7 @@
 {
   "domain": "luas",
   "name": "LUAS",
-  "config_flow": true,
+  "config_flow": false,
   "documentation": "https://github.com/lutzky/hass-luas",
   "issue_tracker": "https://github.com/lutzky/hass-luas/issues",
   "requirements": [],
