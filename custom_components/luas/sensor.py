@@ -58,7 +58,7 @@ class LuasSensor(SensorEntity):
 
     _attr_name = "LUAS"
     _attr_native_unit_of_measurement = TIME_MINUTES
-    _attributes = {}
+    _attributes: dict[str, str | None] = {}
 
     def __init__(self, config: ConfigType) -> None:
         """Initialize a LuasSensor"""
@@ -90,13 +90,13 @@ class LuasSensor(SensorEntity):
 
     def update(self) -> None:
         """Fetch new Luas data"""
-        self._attr_native_value = ""
+        self._attr_native_value = None
         self._attributes = {
-            ATTR_MESSAGE: "",
-            ATTR_DUE_IN: "",
-            ATTR_DESTINATION: "",
-            ATTR_NEXT_DUE_IN: "",
-            ATTR_NEXT_DESTINATION: "",
+            ATTR_MESSAGE: None,
+            ATTR_DUE_IN: None,
+            ATTR_DESTINATION: None,
+            ATTR_NEXT_DUE_IN: None,
+            ATTR_NEXT_DESTINATION: None,
         }
 
         data = luasforecasts.fetch(self._station)
