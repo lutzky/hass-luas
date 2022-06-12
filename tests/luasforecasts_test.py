@@ -60,6 +60,32 @@ class TestLuasForecasts(unittest.TestCase):
 
         self.assertEqual(got, want)
 
+    def test_parse_empty(self):
+        """Test parsing of after-hours empty result"""
+
+        payload = (
+            """<stopInfo created="2022-06-12T04:09:17" stop="Leopardstown Valley" """
+            """stopAbv="LEO">"""
+            """<message>Green Line services operating normally</message>"""
+            """<direction name="Inbound" statusMessage="Services operating normally" """
+            """forecastsEnabled="True" operatingNormally="True"><tram """
+            """destination="No trams forecast" dueMins="" /></direction>"""
+            """<direction name="Outbound" statusMessage="Services operating normally" """
+            """forecastsEnabled="True" operatingNormally="True">"""
+            """<tram destination="No trams forecast" dueMins="" /></direction>"""
+            """</stopInfo>"""
+        )
+
+        got = luasforecasts._parse(payload)  # pylint: disable=protected-access
+
+        want = {
+            "message": "Green Line services operating normally",
+            "stop": "Leopardstown Valley",
+            "trams": [],
+        }
+
+        self.assertEqual(got, want)
+
 
 if __name__ == "__main__":
     unittest.main()
