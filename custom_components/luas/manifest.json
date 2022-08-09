@@ -7,7 +7,7 @@
   "requirements": [],
   "ssdp": [],
   "zeroconf": [],
-  "version": "0.0.0",
+  "version": "0.1.0",
   "homekit": {},
   "dependencies": [],
   "codeowners": ["@lutzky"],
