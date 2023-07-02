@@ -49,11 +49,12 @@ def _sorted_trams(trams: list[Tram]) -> list[Tram]:
     )
 
 
-def _parse(payload: str) -> LuasInfo:
+def _parse(payload: bytes) -> LuasInfo:
     """Parse an XML LUAS forecast from luasforecasts.rpa.ie"""
     tree = xml.etree.ElementTree.fromstring(payload)
     message_node = tree.find("message")
-    assert message_node is not None
+    if message_node is None:
+        raise ValueError
     result: LuasInfo = {
         "message": message_node.text or "",
         "stop": tree.attrib["stop"],
@@ -76,7 +77,12 @@ def _parse(payload: str) -> LuasInfo:
 
 def fetch(stop_code: str) -> LuasInfo:
     """Fetches the latest luas forecast"""
-    return _parse(_fetch_raw(stop_code))
+    try:
+        return _parse(_fetch_raw(stop_code))
+    except ValueError as exc:
+        raise ValueError(
+            f"Failed to parse response. Possibly nonexistent stop {stop_code!r}."
+        ) from exc
 
 
 def main():
