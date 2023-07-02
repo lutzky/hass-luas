@@ -25,16 +25,16 @@ class TestLuasForecasts(unittest.TestCase):
         """Test parsing of trams XML"""
 
         payload = (
-            """<stopInfo created="2022-06-10T14:37:15" stop="Leopardstown Valley" stopAbv="LEO">"""
-            """<message>Green Line services operating normally</message>"""
-            """<direction name="Inbound" statusMessage="Services operating normally" """
-            """forecastsEnabled="True" operatingNormally="True">"""
-            """<tram dueMins="6" destination="Parnell" />"""
-            """<tram dueMins="18" destination="Parnell" /></direction>"""
-            """<direction name="Outbound" statusMessage="Services operating normally" """
-            """forecastsEnabled="True" operatingNormally="True"><tram dueMins="4" """
-            """destination="Bride's Glen" /><tram dueMins="DUE" destination="Bride's Glen" />"""
-            """</direction></stopInfo>"""
+            b"""<stopInfo created="2022-06-10T14:37:15" stop="Leopardstown Valley" stopAbv="LEO">"""
+            b"""<message>Green Line services operating normally</message>"""
+            b"""<direction name="Inbound" statusMessage="Services operating normally" """
+            b"""forecastsEnabled="True" operatingNormally="True">"""
+            b"""<tram dueMins="6" destination="Parnell" />"""
+            b"""<tram dueMins="18" destination="Parnell" /></direction>"""
+            b"""<direction name="Outbound" statusMessage="Services operating normally" """
+            b"""forecastsEnabled="True" operatingNormally="True"><tram dueMins="4" """
+            b"""destination="Bride's Glen" /><tram dueMins="DUE" destination="Bride's Glen" />"""
+            b"""</direction></stopInfo>"""
         )
 
         got = luasforecasts._parse(payload)  # pylint: disable=protected-access
@@ -64,16 +64,16 @@ class TestLuasForecasts(unittest.TestCase):
         """Test parsing of after-hours empty result"""
 
         payload = (
-            """<stopInfo created="2022-06-12T04:09:17" stop="Leopardstown Valley" """
-            """stopAbv="LEO">"""
-            """<message>Green Line services operating normally</message>"""
-            """<direction name="Inbound" statusMessage="Services operating normally" """
-            """forecastsEnabled="True" operatingNormally="True"><tram """
-            """destination="No trams forecast" dueMins="" /></direction>"""
-            """<direction name="Outbound" statusMessage="Services operating normally" """
-            """forecastsEnabled="True" operatingNormally="True">"""
-            """<tram destination="No trams forecast" dueMins="" /></direction>"""
-            """</stopInfo>"""
+            b"""<stopInfo created="2022-06-12T04:09:17" stop="Leopardstown Valley" """
+            b"""stopAbv="LEO">"""
+            b"""<message>Green Line services operating normally</message>"""
+            b"""<direction name="Inbound" statusMessage="Services operating normally" """
+            b"""forecastsEnabled="True" operatingNormally="True"><tram """
+            b"""destination="No trams forecast" dueMins="" /></direction>"""
+            b"""<direction name="Outbound" statusMessage="Services operating normally" """
+            b"""forecastsEnabled="True" operatingNormally="True">"""
+            b"""<tram destination="No trams forecast" dueMins="" /></direction>"""
+            b"""</stopInfo>"""
         )
 
         got = luasforecasts._parse(payload)  # pylint: disable=protected-access
