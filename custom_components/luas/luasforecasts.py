@@ -10,7 +10,7 @@ import xml.etree.ElementTree
 URLBASE = "https://luasforecasts.rpa.ie/xml/get.ashx"
 
 
-def _fetch_raw(stop_code: typing.AnyStr):
+def _fetch_raw(stop_code: str) -> bytes:
     """Fetch a LUAS forecast"""
     params = urllib.parse.urlencode(
         {
@@ -43,13 +43,13 @@ class LuasInfo(typing.TypedDict):
     trams: list[Tram]
 
 
-def _sorted_trams(trams: list[Tram]):
+def _sorted_trams(trams: list[Tram]) -> list[Tram]:
     return sorted(
         trams, key=lambda t: 0 if t["dueMins"] == "DUE" else int(t["dueMins"])
     )
 
 
-def _parse(payload: typing.AnyStr) -> LuasInfo:
+def _parse(payload: str) -> LuasInfo:
     """Parse an XML LUAS forecast from luasforecasts.rpa.ie"""
     tree = xml.etree.ElementTree.fromstring(payload)
     message_node = tree.find("message")
@@ -74,7 +74,7 @@ def _parse(payload: typing.AnyStr) -> LuasInfo:
     return result
 
 
-def fetch(stop_code: typing.AnyStr) -> LuasInfo:
+def fetch(stop_code: str) -> LuasInfo:
     """Fetches the latest luas forecast"""
     return _parse(_fetch_raw(stop_code))
 
