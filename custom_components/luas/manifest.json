@@ -1,7 +1,9 @@
 {
   "domain": "luas",
-  "name": "LUAS",
-  "codeowners": ["@lutzky"],
+  "name": "Luas",
+  "codeowners": [
+    "@lutzky"
+  ],
   "config_flow": false,
   "dependencies": [],
   "documentation": "https://github.com/lutzky/hass-luas",

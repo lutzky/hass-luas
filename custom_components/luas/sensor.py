@@ -1,4 +1,5 @@
-"""Luas sensor"""
+"""Sensor for fetching Luas information."""
+
 from __future__ import annotations
 
 import logging
@@ -56,12 +57,12 @@ def setup_platform(
 class LuasSensor(SensorEntity):
     """Representation of a Sensor."""
 
-    _attr_name = "LUAS"
+    _attr_name = "Luas"
     _attr_native_unit_of_measurement = TIME_MINUTES
     _attributes: dict[str, str | None] = {}
 
     def __init__(self, config: ConfigType) -> None:
-        """Initialize a LuasSensor"""
+        """Initialize a LuasSensor."""
         self._station = config[CONF_STATION]
         self._name = config[CONF_NAME]
 
@@ -75,6 +76,7 @@ class LuasSensor(SensorEntity):
 
     @property
     def extra_state_attributes(self):
+        """Return entity specific state attributes."""
         return self._attributes
 
     def _filter_trams(
@@ -89,7 +91,7 @@ class LuasSensor(SensorEntity):
         return trams
 
     def update(self) -> None:
-        """Fetch new Luas data"""
+        """Fetch new Luas data."""
         self._attr_native_value = None
         self._attributes = {
             ATTR_MESSAGE: None,
@@ -100,7 +102,7 @@ class LuasSensor(SensorEntity):
         }
 
         data = luasforecasts.fetch(self._station)
-        _LOGGER.debug("Got LUAS data: %s", data)
+        _LOGGER.debug("Got Luas data: %s", data)
 
         self._attributes[ATTR_MESSAGE] = data["message"]
         self._attr_name = self._name

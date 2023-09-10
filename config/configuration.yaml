@@ -1,0 +1,15 @@
+# https://www.home-assistant.io/integrations/default_config/
+default_config:
+
+# https://www.home-assistant.io/integrations/logger/
+logger:
+  default: info
+  logs:
+    custom_components.integration_blueprint: debug
+
+sensor:
+  - platform: luas
+    name: Charlemont to Bride's Glen
+    direction: outbound
+    station: CHA
+    destination: "bride's glen"

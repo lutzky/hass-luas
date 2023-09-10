@@ -1,6 +1,8 @@
-"""luasforecasts fetches data from luasforecasts.rpa.ie
+"""luasforecasts fetches data from luasforecasts.rpa.ie.
 
-More info: https://data.gov.ie/dataset/luas-forecasting-api"""
+More info: https://data.gov.ie/dataset/luas-forecasting-api
+"""
+
 import sys
 import typing
 import urllib.parse
@@ -11,7 +13,7 @@ URLBASE = "https://luasforecasts.rpa.ie/xml/get.ashx"
 
 
 def _fetch_raw(stop_code: str) -> bytes:
-    """Fetch a LUAS forecast"""
+    """Fetch a Luas forecast."""
     params = urllib.parse.urlencode(
         {
             "action": "forecast",
@@ -28,7 +30,7 @@ def _fetch_raw(stop_code: str) -> bytes:
 
 
 class Tram(typing.TypedDict):
-    """Tram represents one LUAS Tram in a LuasInfo response"""
+    """Tram represents one Luas Tram in a LuasInfo response."""
 
     destination: str
     direction: str
@@ -36,7 +38,7 @@ class Tram(typing.TypedDict):
 
 
 class LuasInfo(typing.TypedDict):
-    """LuasInfo represents a complete LUAS forecast for a stop"""
+    """LuasInfo represents a complete Luas forecast for a stop."""
 
     message: str
     stop: str
@@ -50,7 +52,7 @@ def _sorted_trams(trams: list[Tram]) -> list[Tram]:
 
 
 def _parse(payload: bytes) -> LuasInfo:
-    """Parse an XML LUAS forecast from luasforecasts.rpa.ie"""
+    """Parse an XML Luas forecast from luasforecasts.rpa.ie."""
     tree = xml.etree.ElementTree.fromstring(payload)
     message_node = tree.find("message")
     if message_node is None:
@@ -76,7 +78,7 @@ def _parse(payload: bytes) -> LuasInfo:
 
 
 def fetch(stop_code: str) -> LuasInfo:
-    """Fetches the latest luas forecast"""
+    """Fetch the latest luas forecast."""
     try:
         return _parse(_fetch_raw(stop_code))
     except ValueError as exc:
@@ -86,8 +88,8 @@ def fetch(stop_code: str) -> LuasInfo:
 
 
 def main():
-    """Runnable test"""
-    print(fetch(sys.argv[1]))
+    """Runnable unit test."""
+    print(fetch(sys.argv[1]))  # noqa: T201
 
 
 if __name__ == "__main__":
