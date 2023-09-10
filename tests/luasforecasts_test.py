@@ -10,9 +10,9 @@ class TestLuasForecasts(unittest.TestCase):
     def test_sort(self):
         """Test sorting of tram lists."""
 
-        tram_a = luasforecasts.Tram(destination="A", direction="", dueMins="7")
-        tram_b = luasforecasts.Tram(destination="B", direction="", dueMins="DUE")
-        tram_c = luasforecasts.Tram(destination="C", direction="", dueMins="3")
+        tram_a = luasforecasts.Tram(destination="A", direction="", dueMins=7)
+        tram_b = luasforecasts.Tram(destination="B", direction="", dueMins=0)
+        tram_c = luasforecasts.Tram(destination="C", direction="", dueMins=3)
 
         data = [tram_a, tram_b, tram_c]
         want = [tram_b, tram_c, tram_a]
@@ -46,15 +46,15 @@ class TestLuasForecasts(unittest.TestCase):
                 {
                     "destination": "Bride's Glen",
                     "direction": "Outbound",
-                    "dueMins": "DUE",
+                    "dueMins": 0,
                 },
                 {
                     "destination": "Bride's Glen",
                     "direction": "Outbound",
-                    "dueMins": "4",
+                    "dueMins": 4,
                 },
-                {"destination": "Parnell", "direction": "Inbound", "dueMins": "6"},
-                {"destination": "Parnell", "direction": "Inbound", "dueMins": "18"},
+                {"destination": "Parnell", "direction": "Inbound", "dueMins": 6},
+                {"destination": "Parnell", "direction": "Inbound", "dueMins": 18},
             ],
         }
 
