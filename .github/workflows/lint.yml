@@ -27,3 +27,5 @@ jobs:
 
         - name: "Run"
           run: python3 -m ruff check .
+
+        - uses: psf/black@stable
