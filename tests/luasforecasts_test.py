@@ -1,14 +1,14 @@
-"""Tests for luasforecasts module"""
+"""Tests for luasforecasts module."""
 import unittest
 
 from custom_components.luas import luasforecasts
 
 
 class TestLuasForecasts(unittest.TestCase):
-    """Tests for luasforecasts module"""
+    """Tests for luasforecasts module."""
 
     def test_sort(self):
-        """Test sorting of tram lists"""
+        """Test sorting of tram lists."""
 
         tram_a = luasforecasts.Tram(destination="A", direction="", dueMins="7")
         tram_b = luasforecasts.Tram(destination="B", direction="", dueMins="DUE")
@@ -22,7 +22,7 @@ class TestLuasForecasts(unittest.TestCase):
         self.assertEqual(got, want)
 
     def test_parse(self):
-        """Test parsing of trams XML"""
+        """Test parsing of trams XML."""
 
         payload = (
             b"""<stopInfo created="2022-06-10T14:37:15" stop="Leopardstown Valley" stopAbv="LEO">"""
@@ -61,7 +61,7 @@ class TestLuasForecasts(unittest.TestCase):
         self.assertEqual(got, want)
 
     def test_parse_empty(self):
-        """Test parsing of after-hours empty result"""
+        """Test parsing of after-hours empty result."""
 
         payload = (
             b"""<stopInfo created="2022-06-12T04:09:17" stop="Leopardstown Valley" """

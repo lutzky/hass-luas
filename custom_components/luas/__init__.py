@@ -1,1 +1,1 @@
-"""The LUAS integration."""
+"""The Luas integration."""
