@@ -59,7 +59,7 @@ class LuasSensor(SensorEntity):
 
     _attr_name = "Luas"
     _attr_native_unit_of_measurement = TIME_MINUTES
-    _attributes: dict[str, str | None] = {}
+    _attributes: dict[str, str | int | None] = {}
 
     def __init__(self, config: ConfigType) -> None:
         """Initialize a LuasSensor."""

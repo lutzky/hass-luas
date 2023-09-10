@@ -34,7 +34,7 @@ class Tram(typing.TypedDict):
 
     destination: str
     direction: str
-    dueMins: str
+    dueMins: int
 
 
 class LuasInfo(typing.TypedDict):
@@ -46,9 +46,13 @@ class LuasInfo(typing.TypedDict):
 
 
 def _sorted_trams(trams: list[Tram]) -> list[Tram]:
-    return sorted(
-        trams, key=lambda t: 0 if t["dueMins"] == "DUE" else int(t["dueMins"])
-    )
+    return sorted(trams, key=lambda t: t["dueMins"])
+
+
+def _convert_minutes(minutes: str) -> int:
+    if minutes == "DUE":
+        return 0
+    return int(minutes)
 
 
 def _parse(payload: bytes) -> LuasInfo:
@@ -64,7 +68,7 @@ def _parse(payload: bytes) -> LuasInfo:
             [
                 {
                     "destination": tram.attrib["destination"],
-                    "dueMins": tram.attrib["dueMins"],
+                    "dueMins": _convert_minutes(tram.attrib["dueMins"]),
                     "direction": direction.attrib["name"],
                 }
                 for direction in tree.findall("direction")
