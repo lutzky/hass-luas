@@ -7,7 +7,7 @@ import sys
 import typing
 import urllib.parse
 import urllib.request
-import xml.etree.ElementTree
+import xml.etree.ElementTree as ET
 
 URLBASE = "https://luasforecasts.rpa.ie/xml/get.ashx"
 
@@ -57,7 +57,7 @@ def _convert_minutes(minutes: str) -> int:
 
 def _parse(payload: bytes) -> LuasInfo:
     """Parse an XML Luas forecast from luasforecasts.rpa.ie."""
-    tree = xml.etree.ElementTree.fromstring(payload)
+    tree = ET.fromstring(payload)
     message_node = tree.find("message")
     if message_node is None:
         raise ValueError
