@@ -8,6 +8,10 @@ updates:
 
   - package-ecosystem: "pip"
     directory: "/"
+    groups:
+      all-updates:
+        patterns:
+          - "*"
     schedule:
       interval: "weekly"
     ignore:
