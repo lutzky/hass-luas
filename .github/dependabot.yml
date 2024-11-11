@@ -1,5 +1,6 @@
 # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 version: 2
+groups:
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -8,6 +9,10 @@ updates:
 
   - package-ecosystem: "pip"
     directory: "/"
+    groups:
+      all-updates:
+        patterns:
+          - "*"
     schedule:
       interval: "weekly"
     ignore:
