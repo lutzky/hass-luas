@@ -3,13 +3,17 @@ version: 2
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
+    groups:
+      all-gh-actions-updates:
+        patterns:
+          - "*"
     schedule:
       interval: "weekly"
 
   - package-ecosystem: "pip"
     directory: "/"
     groups:
-      all-updates:
+      all-pip-updates:
         patterns:
           - "*"
     schedule:
