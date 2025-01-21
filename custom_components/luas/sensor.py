@@ -1,130 +1,146 @@
-"""Sensor for fetching Luas information."""
+"""Sensor platform for luas."""
 
 from __future__ import annotations
 
-import logging
-import typing
+from typing import TYPE_CHECKING
 
-import homeassistant.helpers.config_validation as cv
-import voluptuous as vol
-from homeassistant.components.sensor import PLATFORM_SCHEMA
-from homeassistant.components.sensor import SensorEntity
-from homeassistant.const import TIME_MINUTES
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType
-from homeassistant.helpers.typing import DiscoveryInfoType
+from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
+from homeassistant.const import UnitOfTime
 
-from . import luasforecasts
+from .const import LOGGER
+from .entity import LuasEntity
 
-_LOGGER = logging.getLogger(__name__)
+if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
+    from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-CONF_STATION: typing.Final = "station"
-CONF_DIRECTION: typing.Final = "direction"
-CONF_DESTINATION: typing.Final = "destination"
-CONF_NAME: typing.Final = "name"
+    from .api import Tram
+    from .coordinator import LuasDataUpdateCoordinator
+    from .data import LuasConfigEntry, LuasData
 
-DEFAULT_NAME: typing.Final = "Next Luas"
 
-ATTR_MESSAGE = "Message"
-ATTR_DUE_IN = "Due in"
-ATTR_DESTINATION = "Destination"
-ATTR_NEXT_DUE_IN = "Next due in"
-ATTR_NEXT_DESTINATION = "Next destination"
-
-ICON = "mdi:tram"
-
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
-    {
-        vol.Required(CONF_STATION): cv.string,
-        vol.Optional(CONF_DIRECTION): cv.string,
-        vol.Optional(CONF_DESTINATION): cv.string,
-        vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
-    }
+ENTITY_DESCRIPTIONS = (
+    SensorEntityDescription(
+        key="inbound_trams",
+        name="Inbound trams",
+        icon="mdi:tram",
+    ),
+    SensorEntityDescription(
+        key="outbound_trams",
+        name="Outbound trams",
+        icon="mdi:tram",
+    ),
 )
 
 
-def setup_platform(
-    hass: HomeAssistant,  # pylint: disable=unused-argument
-    config: ConfigType,
-    add_entities: AddEntitiesCallback,
-    discovery_info: DiscoveryInfoType | None = None,  # pylint: disable=unused-argument
+async def async_setup_entry(
+    _hass: HomeAssistant,
+    entry: LuasConfigEntry,
+    async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the sensor platform."""
-    add_entities([LuasSensor(config)])
+    async_add_entities(
+        [
+            LuasMessageSensor(
+                coordinator=entry.runtime_data.coordinator,
+                data=entry.runtime_data,
+            )
+        ]
+    )
+    async_add_entities(
+        LuasTramSensor(
+            coordinator=entry.runtime_data.coordinator,
+            data=entry.runtime_data,
+            direction=direction,
+        )
+        for direction in ["inbound", "outbound"]
+    )
 
 
-class LuasSensor(SensorEntity):
-    """Representation of a Sensor."""
+class LuasMessageSensor(LuasEntity, SensorEntity):
+    """Sensor for showing the luas message."""
 
-    _attr_name = "Luas"
-    _attr_native_unit_of_measurement = TIME_MINUTES
-    _attributes: dict[str, str | int | None] = {}
+    _attr_has_entity_name = True
+    _attr_icon = "mdi:tram"
+    _attr_name = "Message"
 
-    def __init__(self, config: ConfigType) -> None:
-        """Initialize a LuasSensor."""
-        self._station = config[CONF_STATION]
-        self._name = config[CONF_NAME]
-
-        self._direction = config.get(CONF_DIRECTION, "").lower()
-        self._destination = config.get(CONF_DESTINATION, "").lower()
+    def __init__(
+        self,
+        coordinator: LuasDataUpdateCoordinator,
+        data: LuasData,
+    ) -> None:
+        """Initialize the sensor class."""
+        super().__init__(coordinator, data=data)
+        self._attr_unique_id = f"{self.device_id}_message"
 
     @property
-    def icon(self):
-        """Icon to use in the frontend, if any."""
-        return ICON
+    def native_value(self) -> str | None:
+        """Native value for the sensor is the Luas station message."""
+        return self.coordinator.data.get("message")
+
+
+class LuasTramSensor(LuasEntity, SensorEntity):
+    """Sensor for showing Luas trams."""
+
+    _attr_icon = "mdi:tram"
+    _attr_has_entity_name = True
+    _attr_native_unit_of_measurement = UnitOfTime.MINUTES
+
+    direction: str
+
+    def __init__(
+        self,
+        coordinator: LuasDataUpdateCoordinator,
+        data: LuasData,
+        direction: str,
+    ) -> None:
+        """Initialize the sensor class."""
+        super().__init__(coordinator, data=data)
+        self.direction = direction
+        self._attr_unique_id = f"{self.device_id}_tram_{direction}"
 
     @property
-    def extra_state_attributes(self):
-        """Return entity specific state attributes."""
-        return self._attributes
+    def name(self) -> str:
+        """Name for Luas trams sensor."""
+        return f"Next tram {self.direction}"
 
-    def _filter_trams(
-        self, trams: list[luasforecasts.Tram]
-    ) -> list[luasforecasts.Tram]:
-        if self._direction:
-            _LOGGER.debug("Filtering for direction: %s", self._direction)
-            trams = [t for t in trams if t["direction"].lower() == self._direction]
-        if self._destination:
-            _LOGGER.debug("Filtering for destination: %s", self._destination)
-            trams = [t for t in trams if t["destination"].lower() == self._destination]
-        return trams
+    def _trams_in_direction(self) -> list[Tram]:
+        all_trams = self.coordinator.data.get("trams", [])
+        result = [
+            tram
+            for tram in all_trams
+            if tram["direction"].upper() == self.direction.upper()
+            and (
+                self.data.translated_destination is None
+                or self.data.translated_destination.upper()
+                == tram["destination"].upper()
+            )
+        ]
+        LOGGER.debug(
+            "%r: All trams: %r\ndirection=%r, destination=%r\nFiltered trams:%r",
+            self._attr_unique_id,
+            all_trams,
+            self.direction,
+            self.data.translated_destination,
+            result,
+        )
 
-    def update(self) -> None:
-        """Fetch new Luas data."""
-        self._attr_native_value = None
-        self._attributes = {
-            ATTR_MESSAGE: None,
-            ATTR_DUE_IN: None,
-            ATTR_DESTINATION: None,
-            ATTR_NEXT_DUE_IN: None,
-            ATTR_NEXT_DESTINATION: None,
+        return result
+
+    @property
+    def native_value(self) -> int | None:
+        """Native value for the sensor is due minutes for next tram."""
+        trams = self._trams_in_direction()
+        if len(trams) == 0:
+            return None
+        return trams[0]["dueMins"]
+
+    @property
+    def extra_state_attributes(self) -> dict[str, str | int | None]:
+        """Return the state attributes."""
+        trams = self._trams_in_direction()
+        return {
+            "destination": trams[0]["destination"] if len(trams) > 0 else None,
+            "next_due": trams[1]["dueMins"] if len(trams) > 1 else None,
+            "next_destination": trams[1]["destination"] if len(trams) > 1 else None,
         }
-
-        data = luasforecasts.fetch(self._station)
-        _LOGGER.debug("Got Luas data: %s", data)
-
-        self._attributes[ATTR_MESSAGE] = data["message"]
-        self._attr_name = self._name
-
-        relevant_trams = self._filter_trams(data["trams"])
-
-        _LOGGER.debug("Relevant trams: %s", relevant_trams)
-
-        if len(relevant_trams) > 0:
-            due_mins = relevant_trams[0]["dueMins"]
-            self._attributes.update(
-                {
-                    ATTR_DUE_IN: due_mins,
-                    ATTR_DESTINATION: relevant_trams[0]["destination"],
-                }
-            )
-            self._attr_native_value = due_mins
-
-        if len(relevant_trams) > 1:
-            self._attributes.update(
-                {
-                    ATTR_NEXT_DUE_IN: relevant_trams[1]["dueMins"],
-                    ATTR_NEXT_DESTINATION: relevant_trams[1]["destination"],
-                }
-            )

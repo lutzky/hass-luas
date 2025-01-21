@@ -1,8 +1,5 @@
 {
     "name": "Luas",
-    "filename": "luas.zip",
-    "hide_default_branch": true,
-    "homeassistant": "2023.3.0",
-    "render_readme": true,
-    "zip_release": true
+    "homeassistant": "2025.1.0",
+    "hacs": "2.0.1"
 }
