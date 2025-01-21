@@ -1,0 +1,104 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "description": "If you need help with the configuration have a look here: https://github.com/lutzky/hass-luas.\n\nIf Destination is specified, only trams with the given destination will be shown.",
+                "data": {
+                    "direction": "Direction",
+                    "destination": "Destination"
+                }
+            }
+        },
+        "abort": {
+            "already_configured": "This entry is already configured."
+        }
+    },
+    "selector": {
+        "direction": {
+            "options": {
+                "inbound": "Inbound",
+                "outbound": "Outbound"
+            }
+        },
+        "station": {
+            "options": {
+                "comment1": "cSpell:disable",
+                "comment2": "See LUAS_STATIONS in const.py",
+                "hin": "Heuston HIN",
+                "hct": "Heuston HCT",
+                "tpt": "The Point",
+                "sdk": "Spencer Dock",
+                "mys": "Mayor Square - NCI",
+                "gdk": "George's Dock",
+                "con": "Connolly",
+                "bus": "Busáras",
+                "abb": "Abbey Street",
+                "jer": "Jervis",
+                "fou": "Four Courts",
+                "smi": "Smithfield",
+                "mus": "Museum",
+                "heu": "Heuston",
+                "jam": "James's",
+                "fat": "Fatima",
+                "ria": "Rialto",
+                "sui": "Suir Road",
+                "gol": "Goldenbridge",
+                "dri": "Drimnagh",
+                "bla": "Blackhorse",
+                "blu": "Bluebell",
+                "kyl": "Kylemore",
+                "red": "Red Cow",
+                "kin": "Kingswood",
+                "bel": "Belgard",
+                "coo": "Cookstown",
+                "hos": "Hospital",
+                "tal": "Tallaght",
+                "fet": "Fettercairn",
+                "cvn": "Cheeverstown",
+                "cit": "Citywest Campus",
+                "for": "Fortunestown",
+                "sag": "Saggart",
+                "dep": "Depot",
+                "stx": "St. Stephen's Green",
+                "bro": "Broombridge",
+                "cab": "Cabra",
+                "phi": "Phibsborough",
+                "gra": "Grangegorman",
+                "brd": "Broadstone - University",
+                "dom": "Dominick",
+                "par": "Parnell",
+                "oup": "O'Connell - Upper",
+                "ogp": "O'Connell - GPO",
+                "mar": "Marlborough",
+                "wes": "Westmoreland",
+                "try": "Trinity",
+                "daw": "Dawson",
+                "sts": "St. Stephen's Green",
+                "har": "Harcourt",
+                "cha": "Charlemont",
+                "ran": "Ranelagh",
+                "bee": "Beechwood",
+                "cow": "Cowper",
+                "mil": "Milltown",
+                "win": "Windy Arbour",
+                "dun": "Dundrum",
+                "bal": "Balally",
+                "kil": "Kilmacud",
+                "sti": "Stillorgan",
+                "san": "Sandyford",
+                "cpk": "Central Park",
+                "gle": "Glencairn",
+                "gal": "The Gallops",
+                "leo": "Leopardstown Valley",
+                "baw": "Ballyogan Wood",
+                "rcc": "Racecourse",
+                "cck": "Carrickmines",
+                "bre": "Brennanstown",
+                "lau": "Laughanstown",
+                "che": "Cherrywood",
+                "bri": "Brides Glen",
+                "comment3": "cSpell: enable"
+            }
+        }
+    }
+}

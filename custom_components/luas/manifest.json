@@ -4,14 +4,12 @@
   "codeowners": [
     "@lutzky"
   ],
-  "config_flow": false,
-  "dependencies": [],
+  "config_flow": true,
   "documentation": "https://github.com/lutzky/hass-luas",
-  "homekit": {},
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/lutzky/hass-luas/issues",
-  "requirements": [],
-  "ssdp": [],
-  "version": "0.2.0",
-  "zeroconf": []
+  "issue_tracker": "https://github.com/lutzky/hass-luas",
+  "loggers": [
+    "custom_components.luas"
+  ],
+  "version": "0.2.0"
 }
