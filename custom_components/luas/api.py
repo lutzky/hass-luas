@@ -72,8 +72,23 @@ def parse(payload: bytes) -> LuasInfo:
         if tram.attrib["dueMins"]
     ]
 
+    messages = []
+
+    if message_node.text:
+        messages.append(message_node.text)
+
+    direction_messages = sorted(
+        {
+            direction.attrib["statusMessage"]
+            for direction in tree.findall("direction")
+            if direction.attrib["operatingNormally"].lower() != "true"
+        }
+    )
+
+    messages.extend(direction_messages)
+
     result: LuasInfo = {
-        "message": message_node.text or "",
+        "message": "; ".join(messages),
         "stop": tree.attrib["stop"],
         "trams": sorted(trams, key=lambda t: t["dueMins"]),
     }
@@ -98,8 +113,9 @@ class LuasApiClient:
         luas_result = await self._api_wrapper(
             stop=self._station,
         )
+        LOGGER.debug("Raw result from luas API: %r", luas_result)
         parsed_result = parse(luas_result)
-        LOGGER.debug("Result from luas: %r", parsed_result)
+        LOGGER.debug("Parsed result from luas: %r", parsed_result)
         return parsed_result
 
     async def _api_wrapper(

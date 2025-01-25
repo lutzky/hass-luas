@@ -50,6 +50,37 @@ class TestLuasForecastParsing(unittest.TestCase):
 
         assert got == want
 
+    def test_error_condition(self) -> None:
+        """
+        Test error condition.
+
+        We saw this 2025-01-25.
+        """
+        payload = textwrap.dedent("""
+            <stopInfo created="2025-01-25T13:07:43" stop="Leopardstown Valley" stopAbv="LEO">
+                <message>Green Line services operating normally</message>
+                <direction name="Inbound" statusMessage="No service St. Stephen's Green - Parnell. See news" forecastsEnabled="False" operatingNormally="False">
+                    <tram destination="See news for information" dueMins="" />
+                </direction>
+                <direction name="Outbound" statusMessage="No service St. Stephen's Green - Parnell. See news" forecastsEnabled="False" operatingNormally="False">
+                    <tram destination="See news for information" dueMins="" />
+                </direction>
+            </stopInfo>
+        """)  # noqa: E501
+
+        got = parse(payload.encode("utf-8"))
+
+        want = {
+            "message": (
+                "Green Line services operating normally; "
+                "No service St. Stephen's Green - Parnell. See news"
+            ),
+            "stop": "Leopardstown Valley",
+            "trams": [],
+        }
+
+        assert got == want
+
     def test_parse_empty(self) -> None:
         """Test parsing of after-hours empty result."""
         payload = textwrap.dedent(
