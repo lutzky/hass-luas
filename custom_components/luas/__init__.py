@@ -45,7 +45,7 @@ async def async_setup_entry(
         hass=hass,
         logger=LOGGER,
         name=DOMAIN,
-        update_interval=timedelta(hours=1),
+        update_interval=timedelta(seconds=30),
     )
     entry.runtime_data = LuasData(
         client=LuasApiClient(
