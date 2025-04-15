@@ -72,12 +72,12 @@ def parse(payload: bytes) -> LuasInfo:
         if tram.attrib["dueMins"]
     ]
 
-    messages = []
+    messages = set()
 
     if message_node.text:
-        messages.append(message_node.text)
+        messages.add(message_node.text)
 
-    direction_messages = sorted(
+    messages.update(
         {
             direction.attrib["statusMessage"]
             for direction in tree.findall("direction")
@@ -85,10 +85,8 @@ def parse(payload: bytes) -> LuasInfo:
         }
     )
 
-    messages.extend(direction_messages)
-
     result: LuasInfo = {
-        "message": "; ".join(messages),
+        "message": "; ".join(sorted(messages)),
         "stop": tree.attrib["stop"],
         "trams": sorted(trams, key=lambda t: t["dueMins"]),
     }
