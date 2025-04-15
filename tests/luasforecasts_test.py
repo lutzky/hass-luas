@@ -81,6 +81,34 @@ class TestLuasForecastParsing(unittest.TestCase):
 
         assert got == want
 
+    def test_duplicated_message(self) -> None:
+        """
+        Test duplicated message condition.
+
+        We saw this 2025-03-17.
+        """
+        payload = textwrap.dedent("""
+                <stopInfo created="2025-03-17T14:30:10" stop="Leopardstown Valley" stopAbv="LEO">
+                    <message>Sunday Op Hrs. No service Stephen's Green-Dominick</message>
+                    <direction name="Inbound" statusMessage="Sunday Op Hrs. No service Stephen's Green-Dominick" forecastsEnabled="False" operatingNormally="False">
+                        <tram destination="See news for information" dueMins="" />
+                    </direction>
+                    <direction name="Outbound" statusMessage="Sunday Op Hrs. No service Stephen's Green-Dominick" forecastsEnabled="False" operatingNormally="False">
+                        <tram destination="See news for information" dueMins="" />
+                    </direction>
+                </stopInfo>
+            """)  # noqa: E501
+
+        got = parse(payload.encode("utf-8"))
+
+        want = {
+            "message": ("Sunday Op Hrs. No service Stephen's Green-Dominick"),
+            "stop": "Leopardstown Valley",
+            "trams": [],
+        }
+
+        assert got == want
+
     def test_parse_empty(self) -> None:
         """Test parsing of after-hours empty result."""
         payload = textwrap.dedent(
