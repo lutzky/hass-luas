@@ -2,7 +2,7 @@
     "config": {
         "step": {
             "user": {
-                "description": "If you need help with the configuration have a look here: https://github.com/lutzky/hass-luas.\n\nIf Destination is specified, only trams with the given destination will be shown.",
+                "description": "If you need help with the configuration, see the documentation on github.\n\nIf Destination is specified, only trams with the given destination will be shown.",
                 "data": {
                     "direction": "Direction",
                     "destination": "Destination"
