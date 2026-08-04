@@ -1,4 +1,6 @@
 """
+Copyright (c) 2019 - 2023 Ohad Lutzky <lutzky@gmail.com>.
+
 Luas API Client.
 
 This is a client of the Luas Forecasting API, as described in

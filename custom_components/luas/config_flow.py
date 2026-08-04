@@ -1,4 +1,8 @@
-"""Adds config flow for Luas."""
+"""
+Copyright (c) 2019 - 2023 Ohad Lutzky <lutzky@gmail.com>.
+
+Adds config flow for Luas.
+"""
 
 from __future__ import annotations
 

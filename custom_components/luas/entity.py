@@ -1,4 +1,8 @@
-"""LuasEntity class."""
+"""
+Copyright (c) 2019 - 2023 Ohad Lutzky <lutzky@gmail.com>.
+
+LuasEntity class.
+"""
 
 from __future__ import annotations
 

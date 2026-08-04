@@ -1,4 +1,8 @@
-"""Sensor platform for luas."""
+"""
+Copyright (c) 2019 - 2023 Ohad Lutzky <lutzky@gmail.com>.
+
+Sensor platform for luas.
+"""
 
 from __future__ import annotations
 

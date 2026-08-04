@@ -1,4 +1,8 @@
-"""Constants for luas."""
+"""
+Copyright (c) 2019 - 2023 Ohad Lutzky <lutzky@gmail.com>.
+
+Constants for luas.
+"""
 
 from logging import Logger, getLogger
 
