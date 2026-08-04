@@ -1,4 +1,6 @@
 """
+Copyright (c) 2019 - 2023 Ohad Lutzky <lutzky@gmail.com>.
+
 Custom integration to integrate luas with Home Assistant.
 
 For more details about this integration, please refer to

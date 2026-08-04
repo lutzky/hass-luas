@@ -1,4 +1,8 @@
-"""Tests for luas forecast module."""
+"""
+Copyright (c) 2019 - 2023 Ohad Lutzky <lutzky@gmail.com>.
+
+Tests for luas forecast module.
+"""
 
 import textwrap
 import unittest

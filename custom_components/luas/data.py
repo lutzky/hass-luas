@@ -1,4 +1,8 @@
-"""Custom types for Luas."""
+"""
+Copyright (c) 2019 - 2023 Ohad Lutzky <lutzky@gmail.com>.
+
+Custom types for Luas.
+"""
 
 from __future__ import annotations
 

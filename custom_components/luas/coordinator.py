@@ -1,4 +1,8 @@
-"""DataUpdateCoordinator for luas."""
+"""
+Copyright (c) 2019 - 2023 Ohad Lutzky <lutzky@gmail.com>.
+
+DataUpdateCoordinator for luas.
+"""
 
 from __future__ import annotations
 
