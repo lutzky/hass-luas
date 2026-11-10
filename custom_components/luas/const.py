@@ -4,10 +4,15 @@ Copyright (c) 2019 - 2023 Ohad Lutzky <lutzky@gmail.com>.
 Constants for luas.
 """
 
-from logging import Logger, getLogger
+from __future__ import annotations
 
-from homeassistant.core import HomeAssistant
+from logging import Logger, getLogger
+from typing import TYPE_CHECKING
+
 from homeassistant.helpers import translation
+
+if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
 
 LOGGER: Logger = getLogger(__package__)
 

@@ -42,10 +42,10 @@ jobs:
     steps:
       - name: Check out code from GitHub
         uses: "actions/checkout@v7.0.1"
-      - name: Setup Python ${{ env.DEFAULT_PYTHON }}
+      - name: Setup Python 3.13
         uses: "actions/setup-python@v7.1.0"
         with:
-          python-version: ${{ env.DEFAULT_PYTHON }}
+          python-version: "3.13"
       - name: Install Python modules
         run: |
           python3 -m pip install -r requirements.txt pytest
