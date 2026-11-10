@@ -10,12 +10,12 @@ https://luasforecasts.rpa.ie/analysis/view.aspx,
 
 from __future__ import annotations
 
+import asyncio
 import socket
 import typing
 from typing import Any
 
 import aiohttp
-import async_timeout
 import defusedxml.ElementTree as ET  # noqa: N817
 
 from .const import LOGGER
@@ -124,7 +124,7 @@ class LuasApiClient:
     ) -> Any:
         """Get information from the API."""
         try:
-            async with async_timeout.timeout(10):
+            async with asyncio.timeout(10):
                 response = await self._session.request(
                     method="get",
                     url=BASE_URL,
